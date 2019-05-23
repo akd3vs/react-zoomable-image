@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import zipWith from 'lodash/zipWith';
 import { Manager, Pinch } from 'hammerjs';
+import styled from 'styled-components';
 
 const magPlus = require('./magnify.svg');
 const magMinus = require('./magMinus.svg');
@@ -70,6 +71,42 @@ const isInBounds = (coordinates, upperBounds) => {
 };
 
 const nearestInBoundsPosition = (loc, bounds) => loc.map((p, i) => Math.min(p, bounds[i]));
+
+// const Wrapper = styled.div`
+//   position: relative;
+//   z-index: 1;
+//   width: ${props => props.dimensions.width}px;
+//   height: ${props => props.dimensions.height}px;
+//   cursor: url(${props => (props.zoomed ? magMinus : magPlus)}), pointer;
+// `;
+//
+// const ZoomImage = styled.img`
+//   position: relative;
+//   transition-property: z-index;
+//   width: 100%;
+//   height: 100%;
+//   z-index: ${props => (props.zoomed ? -1 : 1)};
+//   transition-delay: ${props => props.zoomTransitionTime}ms;
+// `;
+//
+// const ZoomWrapper = styled.div`
+//   position: absolute;
+//   top: 0;
+//   width: ${props => props.dimensions.width}px;
+//   height: ${props => props.dimensions.height}px;
+//   z-index: ${props => props.zoomed * 100};
+// `;
+
+const ZoomMap = styled.div`
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    pointer-events: none;
+    width: ${props => props.dimensions.width}px;
+    height: ${props => props.dimensions.height}px;
+    z-index: ${props => props.zoomed * 100};
+    border: 2px solid ${props => props.mapBorderColor};
+`;
 
 class ZoomableImage extends Component {
   /**
@@ -382,15 +419,10 @@ class ZoomableImage extends Component {
           style={{ ...styles.zoomContainer, width, height, zIndex: zoomed * 100 }}
         >
           {displayMap && (
-            <div
-              style={{
-                ...styles.innerMap,
-                width: width * mapScaleFactor,
-                height: height * mapScaleFactor,
-                zIndex: zoomed * 200,
-                border: `2px solid ${mapBorderColor}`,
-
-              }}
+            <ZoomMap
+              dimensions={{ width: width * mapScaleFactor, height: height * mapScaleFactor }}
+              zoomed={zoomed}
+              mapBorderColor={mapBorderColor}
             >
               <img style={styles.innerMapImage} src={thumbnailImage.src} alt={thumbnailImage.alt || 'thumbnail'} />
               <div
@@ -403,7 +435,7 @@ class ZoomableImage extends Component {
                   top: `${viewWindowPercent[1] * (1 - baseToZoomRatio)}%`,
                 }}
               />
-            </div>
+            </ZoomMap>
           )}
           <div
             data-name="zoom-image"

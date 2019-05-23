@@ -30,5 +30,10 @@ module.exports = {
   },
   externals: {
     react: 'commonjs react',
+    'styled-components': {
+      commonjs: 'styled-components',
+      commonjs2: 'styled-components',
+      amd: 'styled-components',
+    },
   },
 };
