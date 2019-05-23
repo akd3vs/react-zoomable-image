@@ -104,8 +104,14 @@ const ZoomMap = styled.div`
     pointer-events: none;
     width: ${props => props.dimensions.width}px;
     height: ${props => props.dimensions.height}px;
-    z-index: ${props => props.zoomed * 100};
+    z-index: ${props => props.zoomed * 200};
     border: 2px solid ${props => props.mapBorderColor};
+    overflow: hidden;
+`;
+
+const ZoomInnerMap = styled.img`
+    width: 101%;
+    height: auto;
 `;
 
 class ZoomableImage extends Component {
@@ -424,7 +430,7 @@ class ZoomableImage extends Component {
               zoomed={zoomed}
               mapBorderColor={mapBorderColor}
             >
-              <img style={styles.innerMapImage} src={thumbnailImage.src} alt={thumbnailImage.alt || 'thumbnail'} />
+              <ZoomInnerMap src={thumbnailImage.src} alt={thumbnailImage.alt || 'thumbnail'} />
               <div
                 data-name="map-highlight"
                 style={{
